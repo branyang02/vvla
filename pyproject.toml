@@ -1,0 +1,27 @@
+[project]
+name = "vlla"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Brandon Yang", email = "jqm9ba@virginia.edu" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "loguru>=0.7.0",
+    "msgpack>=1.1.2",
+    "numpy>=2.4.1",
+    "ruff>=0.14.14",
+    "tyro>=1.0.5",
+    "websockets>=15.0",
+]
+
+[project.scripts]
+vlla = "vlla:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0.0"]
+
+[build-system]
+requires = ["uv_build>=0.9.7,<0.10.0"]
+build-backend = "uv_build"
