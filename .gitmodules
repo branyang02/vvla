@@ -1,0 +1,3 @@
+[submodule "clients/libero_client/LIBERO"]
+	path = clients/libero_client/LIBERO
+	url = https://github.com/Robot-VLA/LIBERO.git

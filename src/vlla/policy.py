@@ -44,3 +44,15 @@ class MetaWorldDummyPolicy(BasePolicy):
                 -1.0, 1.0, size=(batch_size, self.action_dim)
             ).astype(np.float32)
         }
+
+
+class LiberoDummyPolicy(BasePolicy):
+    def __init__(self, action_dim: int = 6, chunk_size: int = 5):
+        self.action_dim = action_dim
+        self.chunk_size = chunk_size
+
+    def infer(self, obs: dict) -> dict:
+        # libero_client expects a chunk of actions
+        # action_chunk = [[0.0] * 6 + [-1.0]] * self.chunk_size
+        action_chunk = np.random.uniform(-1.0, 1.0, (self.chunk_size, 7))
+        return {"actions": np.array(action_chunk, dtype=np.float32)}
