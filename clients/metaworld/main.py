@@ -1,7 +1,7 @@
 """
 clients/metaworld/main.py
 
-Meta-World client that runs a policy in a Meta-World environment.
+Writes rollout videos to clients/metaworld/output/.
 """
 
 import math
