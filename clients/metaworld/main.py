@@ -7,7 +7,7 @@ Meta-World client that runs a policy in a Meta-World environment.
 import math
 import os
 from dataclasses import dataclass, field
-from typing import Callable
+from typing import Callable, Literal
 
 import gymnasium as gym
 import metaworld  # noqa: F401
@@ -22,24 +22,6 @@ from vlla.serving.websocket_policy_client import WebsocketPolicyClient
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 
 
-@dataclass
-class Args:
-    host: str = "localhost"
-    port: int = 8765
-    env_name: str = "reach-v3"
-    width: int = 224
-    height: int = 224
-    policy_cameras: list[str] = field(
-        default_factory=lambda: ["gripperPOV", "corner", "corner2"]
-    )
-
-    num_envs: int = 3
-    num_episodes: int = 2
-    max_steps: int = 50
-    seed: int = 42
-    fps: int = 24
-
-
 # https://metaworld.farama.org/rendering/rendering/#render-from-a-specific-camera
 CAMERA_IDS = {
     "topview": 0,
@@ -51,30 +33,56 @@ CAMERA_IDS = {
 }
 
 
-def render_multi_camera(
-    env: gym.vector.SyncVectorEnv,
-    camera_names: list[str],
-) -> dict[str, np.ndarray]:
-    """Render multiple camera views for each sub-environment.
+@dataclass
+class Args:
+    host: str = "localhost"
+    port: int = 8765
+    env_name: str = "reach-v3"
+    width: int = 224
+    height: int = 224
+    # Cameras to use for policy input
+    policy_cameras: list[str] = field(
+        default_factory=lambda: ["gripperPOV", "corner", "corner2"]
+    )
+    # The camera used for rendering the video output
+    render_camera: Literal["corner", "corner2"] = "corner"
 
-    Metaworld does not support multi-camera rendering out of the box
-    (see https://github.com/Farama-Foundation/Metaworld/issues/513),
-    we need to do some hacking here.
+    num_envs: int = 6
+    num_episodes: int = 2
+    max_steps: int = 200
+    seed: int = 42
+    fps: int = 24
 
-    Returns a dict mapping camera_name -> (num_envs, H, W, 3) uint8 array.
-    """
-    results = {name: [] for name in camera_names}
-    for sub_env in env.envs:
-        renderer = sub_env.unwrapped.mujoco_renderer
-        for cam_name in camera_names:
+
+class MultiCameraWrapper(gym.Wrapper):
+    """Wrapper that renders multiple cameras and includes images in info dict."""
+
+    def __init__(self, env: gym.Env, camera_names: list[str]):
+        super().__init__(env)
+        self.camera_names = camera_names
+
+    def _render_cameras(self) -> dict[str, np.ndarray]:
+        renderer = self.unwrapped.mujoco_renderer
+        images = {}
+        for cam_name in self.camera_names:
             renderer.camera_id = CAMERA_IDS[cam_name]
             img = renderer.render(render_mode="rgb_array")
-            results[cam_name].append(img[::-1])  # flip vertically
-    return {name: np.stack(imgs) for name, imgs in results.items()}
+            images[cam_name] = img[::-1].copy()  # flip vertically
+        return images
+
+    def reset(self, **kwargs):
+        obs, info = super().reset(**kwargs)
+        info["cameras"] = self._render_cameras()
+        return obs, info
+
+    def step(self, action):
+        obs, reward, terminated, truncated, info = super().step(action)
+        info["cameras"] = self._render_cameras()
+        return obs, reward, terminated, truncated, info
 
 
 def make_env(
-    env_name: str, width: int, height: int, seed_offset: int
+    env_name: str, width: int, height: int, seed_offset: int, camera_names: list[str]
 ) -> Callable[[], gym.Env]:
     def _init():
         env = gym.make(
@@ -85,6 +93,7 @@ def make_env(
             width=width,
             height=height,
         )
+        env = MultiCameraWrapper(env, camera_names)
         return env
 
     return _init
@@ -116,13 +125,14 @@ def main(args: Args) -> None:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     env_fns = [
-        make_env(args.env_name, args.width, args.height, i)
+        make_env(args.env_name, args.width, args.height, i, args.policy_cameras)
         for i in range(args.num_envs)
     ]
-    env = gym.vector.SyncVectorEnv(env_fns)
+    env = gym.vector.AsyncVectorEnv(env_fns)
 
     for episode in range(args.num_episodes):
         obs, info = env.reset(seed=args.seed + episode)
+        camera_views = info["cameras"]
         total_reward = np.zeros(args.num_envs)
         success = np.zeros(args.num_envs, dtype=bool)
 
@@ -134,20 +144,22 @@ def main(args: Args) -> None:
                 range(args.max_steps), desc=f"Episode {episode + 1}/{args.num_episodes}"
             )
             for step in pbar:
-                camera_views = render_multi_camera(env, args.policy_cameras)
-                grid_frame = tile_frames(list(camera_views["corner"]))
+                grid_frame = tile_frames(list(camera_views[args.render_camera]))
                 video.write_frame(grid_frame)
+
                 result = policy.infer(
                     {
                         "state": obs.astype(np.float32),
-                        "image/gripperPOV": camera_views["gripperPOV"],
-                        "image/corner": camera_views["corner"],
-                        "image/corner2": camera_views["corner2"],
+                        **{
+                            f"image/{name}": camera_views[name]
+                            for name in args.policy_cameras
+                        },
                     }
                 )
                 action = np.clip(result["actions"], -1.0, 1.0).astype(np.float32)
 
                 obs, reward, terminated, truncated, info = env.step(action)
+                camera_views = info["cameras"]
                 total_reward += reward
                 success |= np.asarray(
                     info.get("success", np.zeros(args.num_envs)), dtype=bool
