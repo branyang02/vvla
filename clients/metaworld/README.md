@@ -5,6 +5,11 @@
 sudo apt-get install libegl1-mesa
 ```
 
+## Installation
+```bash
+uv sync --group metaworld
+```
+
 ## Usage
 
 Terminal window 1:
