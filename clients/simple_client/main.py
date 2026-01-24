@@ -5,9 +5,10 @@ Simple client that sends fake observations to the eval server and prints actions
 """
 
 from dataclasses import dataclass
+
 import numpy as np
-from loguru import logger
 import tyro
+from loguru import logger
 
 from vlla.serving.websocket_policy_client import WebsocketPolicyClient
 

@@ -10,12 +10,12 @@ from dataclasses import dataclass, field
 from typing import Callable, Literal
 
 import gymnasium as gym
+import imageio.v3 as iio
 import metaworld  # noqa: F401
 import numpy as np
-import imageio.v3 as iio
+import tyro
 from loguru import logger
 from tqdm import tqdm
-import tyro
 
 from vlla.serving.websocket_policy_client import WebsocketPolicyClient
 

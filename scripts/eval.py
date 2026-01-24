@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 
 import tyro
 
-from vlla.policy import BasePolicy, DummyPolicy, MetaWorldDummyPolicy, LiberoDummyPolicy
+from vlla.policy import BasePolicy, DummyPolicy, LiberoDummyPolicy, MetaWorldDummyPolicy
 from vlla.serving.websocket_policy_server import WebsocketPolicyServer
 
 
