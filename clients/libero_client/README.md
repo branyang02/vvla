@@ -23,3 +23,6 @@ Terminal window 2:
 cd clients/libero_client
 uv run python main.py
 ```
+
+## Troubleshooting
+- If you have installed LIBERO before, make sure to remove cache with `rm -rf ~/.libero`.

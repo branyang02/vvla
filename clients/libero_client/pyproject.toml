@@ -27,6 +27,8 @@ dependencies = [
     "msgpack>=1.1.1",
     "ruff>=0.14.14",
     "tyro>=0.9.17",
+    "tqdm>=4.66.5",
+    "imageio>=2.35.1",
 ]
 
 [[tool.uv.index]]
