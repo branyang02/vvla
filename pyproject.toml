@@ -8,10 +8,12 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "lerobot>=0.4.3",
     "loguru>=0.7.0",
     "msgpack>=1.1.2",
     "numpy>=2.4.1",
     "ruff>=0.14.14",
+    "torch>=2.0.0",
     "tqdm>=4.60.0",
     "tyro>=1.0.5",
     "websockets>=15.0",
@@ -23,7 +25,7 @@ vlla = "vlla:main"
 [dependency-groups]
 dev = ["pytest>=8.0.0"]
 metaworld = [
-    "av>=16.1.0",
+    "av>=15.0.0,<16.0.0",
     "imageio>=2.37.2",
     "metaworld @ git+https://github.com/Farama-Foundation/Metaworld.git@master",
 ]

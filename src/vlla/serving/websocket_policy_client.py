@@ -3,11 +3,10 @@ import time
 import websockets.sync.client
 from loguru import logger
 
-from vlla.policy import BasePolicy
 from vlla.serving import msgpack_numpy
 
 
-class WebsocketPolicyClient(BasePolicy):
+class WebsocketPolicyClient:
     """Policy that proxies inference calls to a WebsocketPolicyServer."""
 
     def __init__(self, host: str = "localhost", port: int = 8765) -> None:

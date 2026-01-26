@@ -15,7 +15,10 @@ uv sync # This installs a separate virtual environment!!
 ## Usage
 Terminal window 1:
 ```bash
-uv run python scripts/eval.py policy:libero
+uv run python scripts/eval.py source:config source.policy:libero --source.dataset.repo-id lerobot/droid_100
+
+# Or with a checkpoint
+uv run python scripts/eval.py --source.checkpoint-path output/libero_policy.pt
 ```
 
 Terminal window 2:

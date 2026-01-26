@@ -5,55 +5,56 @@ uv run python scripts/eval.py --help
 """
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import tyro
+from typing_extensions import Annotated
 
-from vlla.policy import BasePolicy, DummyPolicy, LiberoDummyPolicy, MetaWorldDummyPolicy
+from vlla.datasets import LeRobotDatasetConfig, make_dataset
+from vlla.policies import PolicyConfig, load_policy, make_policy
 from vlla.serving.websocket_policy_server import WebsocketPolicyServer
 
 
-### See https://brentyi.github.io/tyro/examples/subcommands/ for subcommand examples. ###
 @dataclass
-class Dummy:
-    action_dim: int = 8
+class EvalFromCheckpoint:
+    """Load policy from a checkpoint file."""
 
-
-@dataclass
-class MetaWorld:
-    action_dim: int = 4
+    checkpoint_path: Path | str = Path("runs/policy.pt")
 
 
 @dataclass
-class Libero:
-    action_dim: int = 6
-    chunk_size: int = 5
+class EvalFromConfig:
+    """Create policy from config + dataset (for norm_stats)."""
+
+    policy: PolicyConfig
+    dataset: LeRobotDatasetConfig
 
 
-def make_policy(policy_config: Dummy | MetaWorld | Libero) -> BasePolicy:
-    if isinstance(policy_config, Dummy):
-        return DummyPolicy(action_dim=policy_config.action_dim)
-    elif isinstance(policy_config, MetaWorld):
-        return MetaWorldDummyPolicy(action_dim=policy_config.action_dim)
-    elif isinstance(policy_config, Libero):
-        return LiberoDummyPolicy(
-            action_dim=policy_config.action_dim, chunk_size=policy_config.chunk_size
-        )
-    else:
-        raise ValueError(f"Unknown policy config: {policy_config}")
+EvalSource = (
+    Annotated[EvalFromCheckpoint, tyro.conf.subcommand("checkpoint")]
+    | Annotated[EvalFromConfig, tyro.conf.subcommand("config")]
+)
 
 
 @dataclass
-class Args:
-    policy: Dummy | MetaWorld | Libero = field(default_factory=Dummy)
+class EvalConfig:
+    """WebSocket policy server arguments."""
+
+    source: EvalSource = field(default_factory=EvalFromCheckpoint)
     host: str = "0.0.0.0"
     port: int = 8765
 
 
-def main(args: Args) -> None:
-    policy = make_policy(args.policy)
-    server = WebsocketPolicyServer(policy, host=args.host, port=args.port)
+def main(config: EvalConfig) -> None:
+    if isinstance(config.source, EvalFromCheckpoint):
+        policy = load_policy(config.source.checkpoint_path)
+    else:
+        dataset = make_dataset(config.source.dataset)
+        policy = make_policy(config.source.policy, norm_stats=dataset.norm_stats)
+
+    server = WebsocketPolicyServer(policy, host=config.host, port=config.port)
     server.serve_forever()
 
 
 if __name__ == "__main__":
-    main(tyro.cli(Args))
+    main(tyro.cli(EvalConfig, config=(tyro.conf.CascadeSubcommandArgs,)))

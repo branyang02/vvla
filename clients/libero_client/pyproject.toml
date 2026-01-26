@@ -46,3 +46,7 @@ exclude = ["./LIBERO"]
 
 [tool.uv]
 package = true
+
+[tool.setuptools]
+packages = ["LIBERO"]
+
