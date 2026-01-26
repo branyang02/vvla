@@ -11,7 +11,8 @@ import tyro
 
 from vlla.models.pi05 import Pi05, Pi05ModelConfig
 from vlla.policies import PolicyConfig, load_policy, make_policy
-from vlla.policies.base_policy import BasePolicy, DummyPolicy
+from vlla.policies.base_policy import BasePolicy
+from vlla.policies.dummy_policy import DummyPolicy, DummyPolicyConfig
 from vlla.policies.libero_policy import LiberoPolicy, LiberoPolicyConfig
 from vlla.policies.metaworld_policy import MetaworldPolicy, MetaworldPolicyConfig
 from vlla.transforms.transforms import NormStats
@@ -66,12 +67,12 @@ def metaworld_config() -> MetaworldPolicyConfig:
 
 
 def test_dummy_policy_is_base_policy():
-    policy = DummyPolicy()
+    policy = DummyPolicy(DummyPolicyConfig())
     assert isinstance(policy, BasePolicy)
 
 
 def test_dummy_policy_infer_returns_dict():
-    policy = DummyPolicy(action_dim=4)
+    policy = DummyPolicy(DummyPolicyConfig(action_dim=4))
     obs = {"state": np.random.randn(10)}
     result = policy.infer(obs)
     assert isinstance(result, dict)
@@ -80,7 +81,7 @@ def test_dummy_policy_infer_returns_dict():
 
 def test_dummy_policy_infer_shape():
     action_dim = 8
-    policy = DummyPolicy(action_dim=action_dim)
+    policy = DummyPolicy(DummyPolicyConfig(action_dim=action_dim))
     obs = {"state": np.random.randn(10)}
     result = policy.infer(obs)
     assert result["actions"].shape == (action_dim,)
@@ -88,7 +89,7 @@ def test_dummy_policy_infer_shape():
 
 
 def test_dummy_policy_reset():
-    policy = DummyPolicy()
+    policy = DummyPolicy(DummyPolicyConfig())
     # Should not raise
     policy.reset()
 

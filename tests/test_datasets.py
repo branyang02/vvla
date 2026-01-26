@@ -2,6 +2,8 @@
 uv run pytest tests/test_datasets.py
 """
 
+from unittest.mock import patch
+
 import numpy as np
 import pytest
 import torch
@@ -10,6 +12,7 @@ from vlla.datasets import (
     LeRobotDatasetConfig,
     TransformedDataset,
     make_dataloader,
+    make_dataset,
 )
 from vlla.datasets.data_loader import Dataset
 from vlla.transforms.transforms import NormStats
@@ -238,6 +241,84 @@ def test_lerobot_dataset_config_custom():
     assert config.repo_id == "custom/repo"
     assert config.batch_size == 32
     assert config.shuffle is False
+
+
+# ==============================================================================
+# make_dataset Tests
+# ==============================================================================
+
+
+def _create_mock_lerobot():
+    """Create a mock that looks like LeRobotDataset."""
+    from lerobot.datasets.lerobot_dataset import LeRobotDataset
+
+    mock = MockLeRobotDataset(size=50)
+    MockLeRobotDataset.__bases__ = (LeRobotDataset,)
+    return mock
+
+
+def test_make_dataset_returns_dataset():
+    """Test that make_dataset returns a Dataset wrapper."""
+    mock = _create_mock_lerobot()
+    try:
+        with patch("vlla.datasets.LeRobotDataset", return_value=mock):
+            config = LeRobotDatasetConfig(repo_id="test/repo")
+            dataset = make_dataset(config)
+            assert isinstance(dataset, Dataset)
+    finally:
+        MockLeRobotDataset.__bases__ = (torch.utils.data.Dataset,)
+
+
+def test_make_dataset_has_norm_stats():
+    """Test that make_dataset returns a Dataset with norm_stats."""
+    mock = _create_mock_lerobot()
+    try:
+        with patch("vlla.datasets.LeRobotDataset", return_value=mock):
+            config = LeRobotDatasetConfig(repo_id="test/repo")
+            dataset = make_dataset(config)
+            assert hasattr(dataset, "norm_stats")
+            assert "action" in dataset.norm_stats
+            assert "observation.state" in dataset.norm_stats
+    finally:
+        MockLeRobotDataset.__bases__ = (torch.utils.data.Dataset,)
+
+
+def test_make_dataset_preserves_length():
+    """Test that make_dataset preserves the underlying dataset length."""
+    mock = _create_mock_lerobot()
+    try:
+        with patch("vlla.datasets.LeRobotDataset", return_value=mock):
+            config = LeRobotDatasetConfig(repo_id="test/repo")
+            dataset = make_dataset(config)
+            assert len(dataset) == 50  # MockLeRobotDataset default size
+    finally:
+        MockLeRobotDataset.__bases__ = (torch.utils.data.Dataset,)
+
+
+def test_make_dataset_items_accessible():
+    """Test that items from make_dataset are accessible."""
+    mock = _create_mock_lerobot()
+    try:
+        with patch("vlla.datasets.LeRobotDataset", return_value=mock):
+            config = LeRobotDatasetConfig(repo_id="test/repo")
+            dataset = make_dataset(config)
+            item = dataset[0]
+            assert "observation.state" in item
+            assert "action" in item
+    finally:
+        MockLeRobotDataset.__bases__ = (torch.utils.data.Dataset,)
+
+
+def test_make_dataset_passes_repo_id():
+    """Test that make_dataset passes repo_id to LeRobotDataset."""
+    mock = _create_mock_lerobot()
+    try:
+        with patch("vlla.datasets.LeRobotDataset", return_value=mock) as mock_cls:
+            config = LeRobotDatasetConfig(repo_id="my/custom-repo")
+            make_dataset(config)
+            mock_cls.assert_called_once_with(repo_id="my/custom-repo")
+    finally:
+        MockLeRobotDataset.__bases__ = (torch.utils.data.Dataset,)
 
 
 # ==============================================================================
