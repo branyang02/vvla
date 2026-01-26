@@ -12,8 +12,6 @@ dependencies = [
     "loguru>=0.7.0",
     "msgpack>=1.1.2",
     "numpy>=2.4.1",
-    "pytest-cov>=7.0.0",
-    "ruff>=0.14.14",
     "torch>=2.0.0",
     "tqdm>=4.60.0",
     "tyro>=1.0.5",
@@ -24,7 +22,12 @@ dependencies = [
 vlla = "vlla:main"
 
 [dependency-groups]
-dev = ["pytest>=8.0.0"]
+dev = [
+    "pre-commit>=4.5.1",
+    "pytest>=8.0.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.14",
+]
 metaworld = [
     "av>=15.0.0,<16.0.0",
     "imageio>=2.37.2",
