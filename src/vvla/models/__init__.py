@@ -1,9 +1,9 @@
 import tyro
 from typing_extensions import Annotated
 
-from vlla.models.base_model import BaseModel
-from vlla.models.pi0 import Pi0ModelConfig
-from vlla.models.pi05 import Pi05ModelConfig
+from vvla.models.base_model import BaseModel
+from vvla.models.pi0 import Pi0ModelConfig
+from vvla.models.pi05 import Pi05ModelConfig
 
 ModelConfig = (
     Annotated[Pi05ModelConfig, tyro.conf.subcommand("pi05")]
@@ -14,11 +14,11 @@ ModelConfig = (
 def make_model(config: ModelConfig) -> BaseModel:
     """Create a model from config."""
     if isinstance(config, Pi05ModelConfig):
-        from vlla.models.pi05 import Pi05
+        from vvla.models.pi05 import Pi05
 
         return Pi05(config)
     elif isinstance(config, Pi0ModelConfig):
-        from vlla.models.pi0 import Pi0
+        from vvla.models.pi0 import Pi0
 
         return Pi0(config)
     raise ValueError(f"Unknown model config: {config}")

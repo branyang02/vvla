@@ -10,9 +10,9 @@ from pathlib import Path
 import tyro
 from typing_extensions import Annotated
 
-from vlla.datasets import LeRobotDatasetConfig, make_dataset
-from vlla.policies import PolicyConfig, load_policy, make_policy
-from vlla.serving.websocket_policy_server import WebsocketPolicyServer
+from vvla.datasets import LeRobotDatasetConfig, make_dataset
+from vvla.policies import PolicyConfig, load_policy, make_policy
+from vvla.serving.websocket_policy_server import WebsocketPolicyServer
 
 
 @dataclass

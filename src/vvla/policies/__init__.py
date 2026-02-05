@@ -4,13 +4,13 @@ import torch
 import tyro
 from typing_extensions import Annotated
 
-from vlla.models import make_model
-from vlla.policies.base_policy import BasePolicy
-from vlla.policies.dummy_policy import DummyPolicy, DummyPolicyConfig
-from vlla.policies.libero_policy import LiberoPolicy, LiberoPolicyConfig
-from vlla.policies.metaworld_policy import MetaworldPolicy, MetaworldPolicyConfig
-from vlla.transforms import make_transforms
-from vlla.transforms.transforms import NormStats
+from vvla.models import make_model
+from vvla.policies.base_policy import BasePolicy
+from vvla.policies.dummy_policy import DummyPolicy, DummyPolicyConfig
+from vvla.policies.libero_policy import LiberoPolicy, LiberoPolicyConfig
+from vvla.policies.metaworld_policy import MetaworldPolicy, MetaworldPolicyConfig
+from vvla.transforms import make_transforms
+from vvla.transforms.transforms import NormStats
 
 PolicyConfig = (
     Annotated[LiberoPolicyConfig, tyro.conf.subcommand("libero")]

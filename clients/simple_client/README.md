@@ -6,7 +6,10 @@ A minimal client that tests the WebSocket policy server.
 
 Terminal window 1:
 ```bash
-uv run python scripts/eval.py source:config source.policy:dummy --source.dataset.repo-id lerobot/droid_100
+uv run python scripts/eval.py \
+  source:config \
+  source.policy:dummy \
+  --source.dataset.repo-id lerobot/droid_100
 ```
 
 Terminal window 2:

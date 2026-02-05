@@ -1,7 +1,7 @@
 """
 clients/libero_client/websocket_policy_client.py
 
-Copy of src/vlla/serving modules as a standalone client file.
+Copy of src/vvla/serving modules as a standalone client file.
 """
 
 import functools

@@ -11,12 +11,12 @@ from pathlib import Path
 
 import tyro
 
-from vlla.datasets import (
+from vvla.datasets import (
     LeRobotDatasetConfig,
     make_dataloader,
     make_dataset,
 )
-from vlla.policies import PolicyConfig, make_policy
+from vvla.policies import PolicyConfig, make_policy
 
 
 @dataclass

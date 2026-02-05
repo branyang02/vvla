@@ -8,9 +8,9 @@ import pytest
 import torch
 import tyro
 
-from vlla.models import ModelConfig, make_model
-from vlla.models.pi0 import Pi0, Pi0ModelConfig
-from vlla.models.pi05 import Pi05, Pi05ModelConfig
+from vvla.models import ModelConfig, make_model
+from vvla.models.pi0 import Pi0, Pi0ModelConfig
+from vvla.models.pi05 import Pi05, Pi05ModelConfig
 
 #### Fixtures ####
 

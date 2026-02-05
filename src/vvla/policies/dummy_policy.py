@@ -4,7 +4,7 @@ from typing import Self
 
 import numpy as np
 
-from vlla.policies.base_policy import BasePolicy
+from vvla.policies.base_policy import BasePolicy
 
 
 @dataclass

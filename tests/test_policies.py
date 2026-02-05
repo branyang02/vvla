@@ -9,13 +9,13 @@ import pytest
 import torch
 import tyro
 
-from vlla.models.pi05 import Pi05, Pi05ModelConfig
-from vlla.policies import PolicyConfig, load_policy, make_policy
-from vlla.policies.base_policy import BasePolicy
-from vlla.policies.dummy_policy import DummyPolicy, DummyPolicyConfig
-from vlla.policies.libero_policy import LiberoPolicy, LiberoPolicyConfig
-from vlla.policies.metaworld_policy import MetaworldPolicy, MetaworldPolicyConfig
-from vlla.transforms.transforms import NormStats
+from vvla.models.pi05 import Pi05, Pi05ModelConfig
+from vvla.policies import PolicyConfig, load_policy, make_policy
+from vvla.policies.base_policy import BasePolicy
+from vvla.policies.dummy_policy import DummyPolicy, DummyPolicyConfig
+from vvla.policies.libero_policy import LiberoPolicy, LiberoPolicyConfig
+from vvla.policies.metaworld_policy import MetaworldPolicy, MetaworldPolicyConfig
+from vvla.transforms.transforms import NormStats
 
 #### Fixtures ####
 

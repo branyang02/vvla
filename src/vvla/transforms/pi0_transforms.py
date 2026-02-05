@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-from vlla.transforms.transforms import (
+from vvla.transforms.transforms import (
     DataTransformFn,
     Normalize,
     NormStats,

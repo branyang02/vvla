@@ -3,7 +3,7 @@ import time
 import websockets.sync.client
 from loguru import logger
 
-from vlla.serving import msgpack_numpy
+from vvla.serving import msgpack_numpy
 
 
 class WebsocketPolicyClient:

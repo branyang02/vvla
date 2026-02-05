@@ -5,10 +5,10 @@ uv run pytest tests/test_transforms.py
 import numpy as np
 import pytest
 
-from vlla.transforms import make_transforms
-from vlla.transforms.pi0_transforms import Pi0TransformsConfig
-from vlla.transforms.pi05_transforms import Pi05TransformsConfig
-from vlla.transforms.transforms import (
+from vvla.transforms import make_transforms
+from vvla.transforms.pi0_transforms import Pi0TransformsConfig
+from vvla.transforms.pi05_transforms import Pi05TransformsConfig
+from vvla.transforms.transforms import (
     CompositeTransform,
     DataTransformFn,
     Normalize,

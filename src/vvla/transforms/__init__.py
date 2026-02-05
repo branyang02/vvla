@@ -2,9 +2,9 @@ from typing import Annotated, Sequence
 
 import tyro
 
-from vlla.transforms.pi0_transforms import Pi0TransformsConfig
-from vlla.transforms.pi05_transforms import Pi05TransformsConfig
-from vlla.transforms.transforms import DataTransformFn, NormStats
+from vvla.transforms.pi0_transforms import Pi0TransformsConfig
+from vvla.transforms.pi05_transforms import Pi05TransformsConfig
+from vvla.transforms.transforms import DataTransformFn, NormStats
 
 TransformsConfig = (
     Annotated[Pi05TransformsConfig, tyro.conf.subcommand("pi05")]

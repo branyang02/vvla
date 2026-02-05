@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from torch import Tensor, nn
 
-from vlla.models.base_model import BaseModel
+from vvla.models.base_model import BaseModel
 
 
 @dataclass

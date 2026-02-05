@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import torch
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 
-from vlla.datasets.data_loader import Dataset, TransformedDataset
-from vlla.transforms.transforms import DataTransformFn
+from vvla.datasets.data_loader import Dataset, TransformedDataset
+from vvla.transforms.transforms import DataTransformFn
 
 
 @dataclass

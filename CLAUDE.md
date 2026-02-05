@@ -1,4 +1,4 @@
-# VLLA
+# vVLA
 
 ML training and serving framework for visuomotor policies.
 
@@ -16,7 +16,7 @@ uv run ruff format .                 # Format
 ## Project Structure
 
 ```
-src/vlla/
+src/vvla/
     datasets/
         __init__.py            # LeRobotDatasetConfig, make_dataset(), make_dataloader()
         data_loader.py         # Dataset, TransformedDataset

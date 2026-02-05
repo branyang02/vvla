@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 
-from vlla.transforms.transforms import DataTransformFn, NormStats, compose
+from vvla.transforms.transforms import DataTransformFn, NormStats, compose
 
 
 class TransformedDataset(torch.utils.data.Dataset):

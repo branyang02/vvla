@@ -1,4 +1,4 @@
-# vLLA Policies
+# vVLA Policies
 
 ## Setup
 ```
@@ -9,7 +9,7 @@ uv run pre-commit install
 
 ## Testing
 ```
-uv run pytest --cov=vlla --cov-report html
+uv run pytest --cov=vvla --cov-report html
 ```
 ```
 cd htmlcov
