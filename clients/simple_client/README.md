@@ -6,7 +6,7 @@ A minimal client that tests the WebSocket policy server.
 
 Terminal window 1:
 ```bash
-uv run python scripts/eval.py
+uv run python scripts/eval.py policy:dummy
 ```
 
 Terminal window 2:

@@ -14,7 +14,9 @@ uv sync --group metaworld
 
 Terminal window 1:
 ```bash
-uv run python scripts/eval.py policy:meta-world
+uv run python scripts/eval.py \
+  policy:metaworld \
+  --policy.pretrained_repo_id_or_path output/checkpoint
 ```
 
 Terminal window 2:

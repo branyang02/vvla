@@ -1,5 +1,5 @@
 [project]
-name = "vlla"
+name = "vvla"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -8,22 +8,30 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "huggingface-hub>=0.35.3",
+    "lerobot>=0.4.3",
     "loguru>=0.7.0",
     "msgpack>=1.1.2",
     "numpy>=2.4.1",
-    "ruff>=0.14.14",
+    "torch>=2.0.0",
     "tqdm>=4.60.0",
+    "transformers==4.53.2",
     "tyro>=1.0.5",
     "websockets>=15.0",
 ]
 
 [project.scripts]
-vlla = "vlla:main"
+vvla = "vvla:main"
 
 [dependency-groups]
-dev = ["pytest>=8.0.0"]
+dev = [
+    "pre-commit>=4.5.1",
+    "pytest>=8.0.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.14",
+]
 metaworld = [
-    "av>=16.1.0",
+    "av>=15.0.0,<16.0.0",
     "imageio>=2.37.2",
     "metaworld @ git+https://github.com/Farama-Foundation/Metaworld.git@master",
 ]

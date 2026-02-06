@@ -7,8 +7,8 @@ import websockets.asyncio.server as _server
 import websockets.frames
 from loguru import logger
 
-from vlla.policy import BasePolicy
-from vlla.serving import msgpack_numpy
+from vvla.policies.base_policy import BasePolicy
+from vvla.serving import msgpack_numpy
 
 
 class WebsocketPolicyServer:

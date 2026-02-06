@@ -17,7 +17,7 @@ import tyro
 from loguru import logger
 from tqdm import tqdm
 
-from vlla.serving.websocket_policy_client import WebsocketPolicyClient
+from vvla.serving.websocket_policy_client import WebsocketPolicyClient
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 

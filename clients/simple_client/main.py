@@ -10,7 +10,7 @@ import numpy as np
 import tyro
 from loguru import logger
 
-from vlla.serving.websocket_policy_client import WebsocketPolicyClient
+from vvla.serving.websocket_policy_client import WebsocketPolicyClient
 
 
 @dataclass

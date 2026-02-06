@@ -15,7 +15,9 @@ uv sync # This installs a separate virtual environment!!
 ## Usage
 Terminal window 1:
 ```bash
-uv run python scripts/eval.py policy:libero
+uv run python scripts/eval.py \
+  policy:libero \
+  --policy.pretrained_repo_id_or_path output/checkpoint
 ```
 
 Terminal window 2:
