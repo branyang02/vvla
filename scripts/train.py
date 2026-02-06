@@ -4,10 +4,14 @@ scripts/train.py
 Training entry point.
 
 uv run python scripts/train.py --help
+
+uv run python scripts/train.py \
+    policy:libero \
+    --dataset.repo-id lerobot/droid_100 \
+    --policy.repo-id brandonyang/vvla-libero-pi05
 """
 
 from dataclasses import dataclass
-from pathlib import Path
 
 import tyro
 
@@ -24,13 +28,10 @@ class TrainConfig:
     dataset: LeRobotDatasetConfig
     policy: PolicyConfig
 
-    output_dir: Path = Path("output")
-    checkpoint_name: str = "policy.pt"
-
 
 def main(config: TrainConfig) -> None:
     dataset = make_dataset(config.dataset)
-    policy = make_policy(config.policy, norm_stats=dataset.norm_stats)
+    policy = make_policy(config.policy, norm_stats=dataset.norm_stats, mode="train")
     dataloader = make_dataloader(  # noqa: F841
         config.dataset, dataset, transforms=policy.input_transforms
     )
@@ -38,9 +39,8 @@ def main(config: TrainConfig) -> None:
     print("Training setup complete.")
 
     # Save checkpoint
-    config.output_dir.mkdir(parents=True, exist_ok=True)
-    policy.save(config.output_dir / config.checkpoint_name)
-    print(f"Saved checkpoint to {config.output_dir / config.checkpoint_name}")
+    policy.save_pretrained("output/checkpoint")
+    # policy.push_to_hub()
 
 
 if __name__ == "__main__":

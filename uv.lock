@@ -3046,6 +3046,7 @@ name = "vvla"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "huggingface-hub" },
     { name = "lerobot" },
     { name = "loguru" },
     { name = "msgpack" },
@@ -3072,6 +3073,7 @@ metaworld = [
 
 [package.metadata]
 requires-dist = [
+    { name = "huggingface-hub", specifier = ">=0.35.3" },
     { name = "lerobot", specifier = ">=0.4.3" },
     { name = "loguru", specifier = ">=0.7.0" },
     { name = "msgpack", specifier = ">=1.1.2" },

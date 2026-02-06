@@ -15,13 +15,8 @@ uv sync --group metaworld
 Terminal window 1:
 ```bash
 uv run python scripts/eval.py \
-  source:config \
-  source.policy:metaworld \
-  --source.dataset.repo-id lerobot/droid_100
-
-# Or run with a checkpoint
-uv run python scripts/eval.py \
-  --source.checkpoint-path output/metaworld_policy.pt
+  policy:metaworld \
+  --policy.pretrained_repo_id_or_path output/checkpoint
 ```
 
 Terminal window 2:

@@ -1,26 +1,17 @@
 from collections.abc import Sequence
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Self
+from dataclasses import dataclass
 
 import numpy as np
 import torch
 from torch import Tensor
 
-from vvla.models import ModelConfig
 from vvla.models.base_model import BaseModel
-from vvla.models.pi05 import Pi05ModelConfig
-from vvla.policies.base_policy import BasePolicy
-from vvla.transforms import TransformsConfig
-from vvla.transforms.pi05_transforms import Pi05TransformsConfig
+from vvla.policies.base_policy import BasePolicy, BasePolicyConfig
 from vvla.transforms.transforms import DataTransformFn
 
 
 @dataclass
-class MetaworldPolicyConfig:
-    model: ModelConfig = field(default_factory=Pi05ModelConfig)
-    transforms: TransformsConfig = field(default_factory=Pi05TransformsConfig)
-
+class MetaworldPolicyConfig(BasePolicyConfig):
     action_dim: int = 4
 
 
@@ -36,6 +27,8 @@ class MetaworldPolicy(BasePolicy):
         [2]: dz - end-effector z displacement
         [3]: gripper control
     """
+
+    policy_type = "metaworld"
 
     def __init__(
         self,
@@ -61,29 +54,3 @@ class MetaworldPolicy(BasePolicy):
     def train_forward(self, batch: dict[str, Tensor]) -> dict[str, Tensor]:
         """For training: data already transformed by dataset, just run model."""
         return self.model(batch)
-
-    def save(self, path: str | Path) -> None:
-        """Save checkpoint with model weights + transforms."""
-        checkpoint = {
-            "policy_type": "metaworld",
-            "config": self.config,
-            "model_state_dict": self.model.state_dict(),
-            "input_transforms": list(self.input_transforms),
-            "output_transforms": list(self.output_transforms),
-        }
-        torch.save(checkpoint, path)
-
-    @classmethod
-    def load(cls, path: str | Path) -> Self:
-        """Load policy from checkpoint."""
-        from vvla.models import make_model
-
-        checkpoint = torch.load(path, weights_only=False)
-        model = make_model(checkpoint["config"].model)
-        model.load_state_dict(checkpoint["model_state_dict"])
-        return cls(
-            config=checkpoint["config"],
-            model=model,
-            input_transforms=checkpoint["input_transforms"],
-            output_transforms=checkpoint["output_transforms"],
-        )
